@@ -33,7 +33,7 @@ Examples:
         $ dfuf -o ffuf.json -od ffuf ffuf_dump
         
         View the result in a pretty format :
-        $ find ffuf_dump/proc -type f -exec bash -c 'pid=$(echo $0 | cut -d '/' -f3); echo -en "\\n$pid | "; cat $0 | tr "\0" " "' {} \; | sort -s -n -k 1,1
+        $ find ffuf_dump/proc -type f -exec bash -c 'pid=$(echo $0 | cut -d '/' -f3); echo -en "\\n$pid | "; cat $0 | tr "\\0" " "' {} \; | sort -s -n -k 1,1
         '''
 
 
