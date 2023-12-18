@@ -29,6 +29,8 @@ usage: dfuf [-h] -o FFUF_JSON_OUTPUT -od FFUF_OUTPUT_DIR dir_to_save_extracted_f
 
 A tool to extract files from ffuf output
 
+https://github.com/opabravo/dfuf
+
 positional arguments:
   dir_to_save_extracted_files
                         Output directory where extracted files will be saved

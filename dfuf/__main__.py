@@ -40,7 +40,7 @@ Examples:
 def init_parser() -> argparse.Namespace:
     """Parse arguments"""
     parser = argparse.ArgumentParser(
-        description="A tool to extract files from ffuf output",
+        description="A tool to extract files from ffuf output\n\nhttps://github.com/opabravo/dfuf",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=HELP_TEXT,
     )
