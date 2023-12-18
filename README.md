@@ -1,12 +1,14 @@
+# dfuf - Dump Faster U Fool
+
 ## About
 
-Utilize ffuf to fastly dump files via Directory Traversal / LFI.
+Utilize ffuf to dump files via Directory Traversal / LFI in a breeze.
 
 This simple script can extract files from ffuf request dump (`-od` option).
 
 **ffuf** should be faster than any LFI dumpers available on the public.
 
-> The name of **dfuf** (Dump aster U Fool) was inspired by **ffuf** (Fuzz Faster U Fool)
+> The name of **dfuf** was inspired by **ffuf** (Fuzz Faster U Fool)
 
 ## Demo
 
