@@ -2,13 +2,19 @@
 
 ## About
 
-Utilize ffuf to dump files via Directory Traversal / LFI in a breeze.
+> The name of **dfuf** was inspired by **ffuf** (Fuzz Faster U Fool)
 
-This simple script can extract files from ffuf request dump (`-od` option).
+### Why dfuf?
+
+This simple script can extract files from **ffuf** request/response dump (`-od` option).
 
 **ffuf** should be faster than any LFI dumpers available on the public.
 
-> The name of **dfuf** was inspired by **ffuf** (Fuzz Faster U Fool)
+### Example Scenarios
+
+- When one was stuck at initial foothold, he/she might need to dump files via LFI / Directory Traversal vulnerability for further enumeration.
+
+- When getting shell is impossible, one may perform data exfiltration by dumping files via LFI / Directory Traversal vulnerability.
 
 ## Demo
 
