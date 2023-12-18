@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "dfuf"
+version = "0.1.0"
+description = "Utilize ffuf to fastly dump files via Directory Traversal / LFI"
+authors = ["Fate Walker <21262207+opabravo@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+dfuf = "dfuf.__main__:main"
