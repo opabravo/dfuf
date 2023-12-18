@@ -66,6 +66,6 @@ Examples:
 
 ## License
 
-
+[MIT](LICENSE)
 
 
