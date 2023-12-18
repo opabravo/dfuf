@@ -18,7 +18,7 @@ This simple script can extract files from **ffuf** request/response dump (`-od` 
 
 ## Demo
 
-[![asciicast](https://asciinema.org/a/71wYTurJc36uM2oTwp6cOZMtj.svg)](https://asciinema.org/a/71wYTurJc36uM2oTwp6cOZMtj)
+[![asciicast](https://asciinema.org/a/FBwbf8oRoy869FkCgR8JjaGeM.svg)](https://asciinema.org/a/FBwbf8oRoy869FkCgR8JjaGeM)
 
 ## Installation
 
