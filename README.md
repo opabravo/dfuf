@@ -6,11 +6,13 @@
 
 ### Why dfuf?
 
-This simple script can extract files from **ffuf** request/response dump (`-od` option).
+**ffuf** can save request & response dump to a directory (`-od` option)
 
-**ffuf** should be faster than any LFI dumpers available on the public.
+This simple script can extract files from the request & response dump saved by **ffuf**.
 
-### Example Scenarios
+**ffuf** should be faster than any LFI dumpers available on the public. So, why not use **ffuf** to dump files?
+
+### Example Use Cases
 
 - When one was stuck at initial foothold, he/she might need to dump files via LFI / Directory Traversal vulnerability for further enumeration.
 
